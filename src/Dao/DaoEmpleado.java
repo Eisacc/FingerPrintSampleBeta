@@ -9,6 +9,9 @@ import Model.Empleado;
 import java.util.List;
 
 /**
+
+HOHOHOHO
+
  *
  * @author Administrador
  */
