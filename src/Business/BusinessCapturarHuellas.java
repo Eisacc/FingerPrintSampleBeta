@@ -6,10 +6,13 @@
 package Business;
 
 import Constantes.UtilConstants;
+import Dao.DaoEmpleado;
+import Dao.DaoEmpleadoImplements;
 import Dao.DaoHuellaDedos;
 import Dao.DaoHuellaDedosImplements;
 import Dao.DaoHuellaEmplado;
 import Dao.DaoHuellaEmpleadoImplements;
+import Model.Empleado;
 import Model.HuellaDedos;
 import Model.HuellaEmpleado;
 import Util.UtilFunctions;
@@ -46,6 +49,11 @@ public class BusinessCapturarHuellas {
     private final DaoHuellaEmplado daoHuellaEmplado;
 
     /**
+     * daoHuellaEmplado
+     */
+    private final DaoEmpleado daoEmpleado;
+
+    /**
      * pathImagesDedos
      */
     private Map<Integer, String> pathImagesDedos = new HashMap<>();
@@ -56,6 +64,7 @@ public class BusinessCapturarHuellas {
     public BusinessCapturarHuellas() {
         daoHuellaDedos = new DaoHuellaDedosImplements();
         daoHuellaEmplado = new DaoHuellaEmpleadoImplements();
+        daoEmpleado = new DaoEmpleadoImplements();
         pathImagesDedos.put(0, "files/s");
         pathImagesDedos.put(1, "files/ic_pulgar_izquierdo-web.png");
         pathImagesDedos.put(2, "files/ic_indice_izquierdo-web.png");
@@ -68,13 +77,22 @@ public class BusinessCapturarHuellas {
         pathImagesDedos.put(9, "files/ic_anular_derecho-web.png");
         pathImagesDedos.put(10, "files/ic_menique_derecho-web.png");
 
-        HuellaEmpleado he = new HuellaEmpleado();
-        he.setIdEmpleado(107);
-        List<HuellaEmpleado> Huellas = daoHuellaEmplado.findAll(he);
-        for (HuellaEmpleado Huella : Huellas) {
-            capturaHuellaDedos.put(Huella.getIdDedo(), Huella.getHuella());
-        }
+    }
 
+    /**
+     *
+     * @param empleado
+     */
+    public void loadHuellasEmpleado(final Empleado empleado) {
+
+        final HuellaEmpleado huellaEmpleado = new HuellaEmpleado();
+        if (UtilFunctions.isNotNull(empleado)) {
+            huellaEmpleado.setIdEmpleado(empleado.getId());
+            List<HuellaEmpleado> Huellas = daoHuellaEmplado.findAll(huellaEmpleado);
+            for (HuellaEmpleado Huella : Huellas) {
+                capturaHuellaDedos.put(Huella.getIdDedo(), Huella.getHuella());
+            }
+        }
     }
 
     /**
@@ -111,7 +129,7 @@ public class BusinessCapturarHuellas {
      *
      * @param index
      */
-    public int operacionHuella(int index) {
+    public int operacionHuella(final int index) {
         int operacion = UtilConstants.CREACION_HUELLA;
         if (index == 0) {
             operacion = UtilConstants.SIN_ACCION;
@@ -121,16 +139,37 @@ public class BusinessCapturarHuellas {
         return operacion;
     }
 
-    public void createRegistroHuella(HuellaEmpleado huellaEmpleado) {
+    /**
+     *
+     * @param huellaEmpleado
+     */
+    public void createRegistroHuella(final HuellaEmpleado huellaEmpleado) {
         capturaHuellaDedos.put(huellaEmpleado.getIdDedo(), huellaEmpleado.getHuella());
         daoHuellaEmplado.create(huellaEmpleado);
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<HuellaEmpleado> findAllHuellas() {
         List<HuellaEmpleado> Huellas = null;
         Huellas = daoHuellaEmplado.findAll();
         return Huellas;
+    }
+
+    /**
+     *
+     * @param empleado
+     * @return
+     */
+    public Empleado findEmpleado(final Empleado empleado) {
+        Empleado e = null;
+        if (UtilFunctions.isNotNull(empleado)) {
+            e = daoEmpleado.findById(empleado);
+        }
+        return e;
     }
 
 }

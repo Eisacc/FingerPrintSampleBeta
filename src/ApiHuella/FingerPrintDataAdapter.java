@@ -208,7 +208,15 @@ public class FingerPrintDataAdapter {
 
     }
 
-    private DPFPFeatureSet extraerCaracteristicas(DPFPSample sample, DPFPDataPurpose purpose) {
+    public void cleanTemplate() {
+        reclutador.clear();
+        stopLector();
+        setTemplate(null);
+        initLector();
+
+    }
+
+    private DPFPFeatureSet extraerCaracteristicas(final DPFPSample sample, final DPFPDataPurpose purpose) {
         DPFPFeatureSet dPFPFeatureSet = null;
         DPFPFeatureExtraction extractor = DPFPGlobal.getFeatureExtractionFactory().createFeatureExtraction();
         try {

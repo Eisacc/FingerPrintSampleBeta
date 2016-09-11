@@ -139,11 +139,33 @@ public class DaoGenericImplements<T> {
     /**
      *
      * @param sqlQuery
+     * @param parameters
      * @return
      */
-    public T findById(final String sqlQuery) {
+    public T findById(final String sqlQuery, final List<ParameterInSql> parameters) {
         T object = null;
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeHierarchyAdapter(byte[].class, new GsonHelperTypeBytes());
+        builder.registerTypeAdapter(Date.class, new GsonHelperTypeDate());
+        Gson gson = builder.create();
 
+        if (conexion != null) {
+            try {
+                preparedStatement = conexion.prepareStatement(sqlQuery);
+                HelperSqlParams.fillParameters(preparedStatement, parameters);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                String[] columNames = HelperSqlParams.getColumNamesQuery(resultSetMetaData);
+                while (resultSet.next()) {
+                    final JsonObject jsonObject = HelperSqlParams.fillJsonObjectWithRowSQL(resultSet, resultSetMetaData, columNames);
+                    object = (T) gson.fromJson(jsonObject, generic);
+
+                }
+                preparedStatement.close();
+            } catch (SQLException ex) {
+                object = null;
+            }
+        }
         return object;
     }
 

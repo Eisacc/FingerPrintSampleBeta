@@ -9,9 +9,6 @@ import Model.Empleado;
 import java.util.List;
 
 /**
-
-HOHOHOHO
-
  *
  * @author Administrador
  */
@@ -32,9 +29,10 @@ public interface DaoEmpleado {
 
     /**
      *
+     * @param empleado
      * @return
      */
-    public List<Empleado> findAll();
+    public List<Empleado> findAll(Empleado empleado);
 
     /**
      *

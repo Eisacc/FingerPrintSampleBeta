@@ -8,6 +8,7 @@ package Vista;
 import Business.BusinessEmpleado;
 import Constantes.UtilConstants;
 import Model.Empleado;
+import Util.Session;
 import Util.UtilFunctions;
 import Util.UtilJOptionMessages;
 import comunes.ConexionDb;
@@ -32,11 +33,19 @@ public class JFDatosEmpleado extends JFrameBase {
     private ButtonGroup buttonGroup;
 
     /**
-     *
+     * dateMask
      */
     private MaskFormatter dateMask = null;
 
+    /**
+     * empleado
+     */
     private Empleado empleado;
+
+    /**
+     * session
+     */
+    private Session session = null;
 
     /**
      * Creates new form JFDatosEmpleado
@@ -47,9 +56,7 @@ public class JFDatosEmpleado extends JFrameBase {
         setFrameCurrent(this);
         iniciarComponentesExtras();
         empleado = new Empleado();
-        ConexionDb con = ConexionDb.getConnectionDb();
-        con.initConnection();
-
+        session = Session.createInstanceSession();
     }
 
     /**
@@ -68,7 +75,7 @@ public class JFDatosEmpleado extends JFrameBase {
         }
     }
 
-    public void limpiarFormulario() {
+    private void limpiarFormulario() {
         jTRfc.setText("");
         JTCurp.setText("");
         JTNombre.setText("");
@@ -88,7 +95,7 @@ public class JFDatosEmpleado extends JFrameBase {
 
     }
 
-    public void saveDatosEmpleado() {
+    private void saveDatosEmpleado() {
 
         empleado.setRfc(jTRfc.getText());
         empleado.setCurp(JTCurp.getText());
@@ -103,6 +110,16 @@ public class JFDatosEmpleado extends JFrameBase {
             empleado.setGenero("F");
         }
 
+    }
+
+    /**
+     * accionAtras
+     */
+    @Override
+    public void accionAtras() {
+        dispose();
+        JFMenuEmpleados jFMenuEmpleados = new JFMenuEmpleados();
+        jFMenuEmpleados.setVisible(true);
     }
 
     /**
@@ -382,7 +399,16 @@ public class JFDatosEmpleado extends JFrameBase {
 
         BusinessEmpleado businessEmpleado = new BusinessEmpleado();
         businessEmpleado.createRegistroEmpleado(empleado);
-        //ConexionDb.destroyConnectionDb();
+        Boolean reBoolean = UtilJOptionMessages.dialogShowConfirm("¿Decea capturar las Huellas digitales?");
+        if (reBoolean) {
+            session.addObjectSession(UtilConstants.EMPLEADO_ALTA, empleado);
+            dispose();
+            JFCapturHuellas jFCapturHuellas = new JFCapturHuellas();
+            jFCapturHuellas.setVisible(true);
+        } else {
+            accionAtras();
+        }
+
     }//GEN-LAST:event_JBGuardarActionPerformed
 
     private void JBLoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBLoadFileActionPerformed

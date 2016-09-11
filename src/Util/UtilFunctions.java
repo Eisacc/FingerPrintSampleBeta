@@ -26,7 +26,7 @@ public class UtilFunctions {
      * @param object
      * @return
      */
-    public static Boolean isBoolean(Object object) {
+    public static Boolean isBoolean(final Object object) {
         Boolean reBoolean = null;
         if (object instanceof Boolean) {
             reBoolean = (Boolean) object;
@@ -39,7 +39,7 @@ public class UtilFunctions {
      * @param object
      * @return
      */
-    public static Boolean isNotNull(Object object) {
+    public static Boolean isNotNull(final Object object) {
         Boolean reBoolean = Boolean.TRUE;
         if (object == null) {
             reBoolean = Boolean.FALSE;
@@ -49,10 +49,32 @@ public class UtilFunctions {
 
     /**
      *
+     * @param object
+     * @return
+     */
+    public static Boolean isNotNullOrEmptyString(final Object object) {
+        Boolean reBoolean = Boolean.FALSE;
+        String cadena = null;
+        if (isNotNull(object) && object instanceof String) {
+            cadena = (String) object;
+            cadena = cadena.trim();
+            cadena = cadena.equals(UtilConstants.STRING_EMPTY) ? null : cadena;
+            if (isNotNull(cadena)) {
+                reBoolean = Boolean.TRUE;
+            }
+        } else if (isNotNull(object)) {
+            reBoolean = Boolean.TRUE;
+
+        }
+        return reBoolean;
+    }
+
+    /**
+     *
      * @param pareComponent
      * @return
      */
-    public static File selectImage(Component pareComponent) {
+    public static File selectImage(final Component pareComponent) {
         final JFileChooser chooser = new JFileChooser();
         File file = null;
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -68,7 +90,12 @@ public class UtilFunctions {
         return file;
     }
 
-    public static byte[] fileToArrayBytes(File file) {
+    /**
+     *
+     * @param file
+     * @return
+     */
+    public static byte[] fileToArrayBytes(final File file) {
         byte[] arrayBytesFile = null;
         try {
             if (isNotNull(file) && file.exists()) {
@@ -80,7 +107,12 @@ public class UtilFunctions {
         return arrayBytesFile;
     }
 
-    public static ImageIcon arrayBytesToImage(byte[] arrayBytes) {
+    /**
+     *
+     * @param arrayBytes
+     * @return
+     */
+    public static ImageIcon arrayBytesToImage(final byte[] arrayBytes) {
         ImageIcon imageIcon = null;
         if (isNotNull(arrayBytes)) {
             imageIcon = new ImageIcon(arrayBytes);

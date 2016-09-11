@@ -11,6 +11,11 @@ import Dao.DaoEmpleadoImplements;
 import Model.Empleado;
 import Util.UtilFunctions;
 import Util.UtilJOptionMessages;
+import java.io.File;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,7 +23,14 @@ import Util.UtilJOptionMessages;
  */
 public class BusinessEmpleado {
 
-    private DaoEmpleado daoEmpleado;
+    /**
+     * daoEmpleado
+     */
+    private final DaoEmpleado daoEmpleado;
+    /**
+     * empleados
+     */
+    private List<Empleado> empleados;
 
     public BusinessEmpleado() {
         daoEmpleado = new DaoEmpleadoImplements();
@@ -39,6 +51,51 @@ public class BusinessEmpleado {
             reBoolean = Boolean.TRUE;
         }
         return reBoolean;
+    }
+
+    /**
+     *
+     * @param jTable
+     * @param emp
+     */
+    public void fillJtableEmpleados(final JTable jTable, final Empleado emp) {
+        final DefaultTableModel defaultTableModel = new DefaultTableModel();
+        final String[] columNames = {"Rfc", "Nombre", "Apellido Paterno", "Apellido Materno"};
+        defaultTableModel.setColumnIdentifiers(columNames);
+        if (UtilFunctions.isNotNull(jTable)) {
+            empleados = daoEmpleado.findAll(emp);
+            for (Empleado empleado : empleados) {
+                Object[] valuesColumns = new Object[4];
+                valuesColumns[0] = empleado.getRfc();
+                valuesColumns[1] = empleado.getNombre();
+                valuesColumns[2] = empleado.getApellidoPaterno();
+                valuesColumns[3] = empleado.getApellidoMaterno();
+
+                defaultTableModel.addRow(valuesColumns);
+            }
+            jTable.setModel(defaultTableModel);
+
+        }
+    }
+
+    /**
+     *
+     * @param row
+     * @return
+     */
+    public ImageIcon getFotoEmpleado(int row) {
+        ImageIcon iconEmpleado = null;
+        Empleado empleado = empleados.get(row);
+        byte[] fotoEmpleado = empleado.getFoto();
+        iconEmpleado = UtilFunctions.arrayBytesToImage(fotoEmpleado);
+
+        if (!UtilFunctions.isNotNull(iconEmpleado)) {
+            File fileImFile = new File(getClass().getClassLoader().getResource("files/sinImagen.png").getPath());
+            fotoEmpleado = UtilFunctions.fileToArrayBytes(fileImFile);
+            iconEmpleado = UtilFunctions.arrayBytesToImage(fotoEmpleado);
+        }
+        System.out.println("icon empleado" + iconEmpleado);
+        return iconEmpleado;
     }
 
 }

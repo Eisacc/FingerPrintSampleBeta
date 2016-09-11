@@ -35,7 +35,7 @@ public class HelperSqlParams {
             try {
                 switch (parameter.getType()) {
                     case ConstantesSqlParams.TYPE_INTEGER:
-                        preparedStatement.setObject(parameter.getIndexParam(), parameter.getValor() == null ? null : (int) parameter.getValor() );
+                        preparedStatement.setObject(parameter.getIndexParam(), parameter.getValor() == null ? null : (int) parameter.getValor());
                         break;
                     case ConstantesSqlParams.TYPE_STRING:
                         preparedStatement.setString(parameter.getIndexParam(), (String) parameter.getValor());

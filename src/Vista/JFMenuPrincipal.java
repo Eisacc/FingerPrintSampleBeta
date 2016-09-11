@@ -5,17 +5,20 @@
  */
 package Vista;
 
+import comunes.JFrameBase;
+
 /**
  *
  * @author Administrador
  */
-public class JFMenuPrincipal extends javax.swing.JFrame {
+public class JFMenuPrincipal extends JFrameBase {
 
     /**
      * Creates new form JFMenuPrincipal
      */
     public JFMenuPrincipal() {
         initComponents();
+        setFrameCurrent(this);
     }
 
     /**
@@ -27,21 +30,42 @@ public class JFMenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jBEmpleados = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jBEmpleados.setText("Empleados");
+        jBEmpleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBEmpleadosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(102, 102, 102)
+                .addComponent(jBEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(503, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(124, 124, 124)
+                .addComponent(jBEmpleados)
+                .addContainerGap(289, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEmpleadosActionPerformed
+        dispose();
+        JFMenuEmpleados fMenuEmpleados = new JFMenuEmpleados();
+        fMenuEmpleados.setVisible(true);
+    }//GEN-LAST:event_jBEmpleadosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +103,6 @@ public class JFMenuPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBEmpleados;
     // End of variables declaration//GEN-END:variables
 }

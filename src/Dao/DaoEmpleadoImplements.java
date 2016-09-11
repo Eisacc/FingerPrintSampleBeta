@@ -10,6 +10,8 @@ import Constantes.QueryConstantesSQL;
 import Constantes.ServerDbConstantes;
 import Model.Empleado;
 import Model.ParameterInSql;
+import Util.DynamicQuery;
+import Util.UtilFunctions;
 import com.google.gson.reflect.TypeToken;
 import comunes.DaoGenericImplements;
 import comunes.LoadProperties;
@@ -90,10 +92,20 @@ public class DaoEmpleadoImplements extends DaoGenericImplements<Empleado> implem
      * @return
      */
     @Override
-    public List<Empleado> findAll() {
-        List<ParameterInSql> listParametros = new ArrayList<>();
-        List<Empleado> empleados = findAll(mapSqlQuerys.get(QueryConstantesSQL.SQL_SELECT), listParametros);
+    public List<Empleado> findAll(Empleado empleado) {
+        final DynamicQuery dynamicQuery = new DynamicQuery(mapSqlQuerys.get(QueryConstantesSQL.SQL_SELECT));
+        if (UtilFunctions.isNotNull(empleado)) {
+            dynamicQuery.appendParameter("nombre", empleado.getNombre());
+            dynamicQuery.appendParameter("apaterno", empleado.getApellidoPaterno());
+            dynamicQuery.appendParameter("amaterno", empleado.getApellidoMaterno());
+            dynamicQuery.appendParameter("rfc", empleado.getRfc());
+            dynamicQuery.appendParameter("curp", empleado.getCurp());
+            System.out.println("Query:" + dynamicQuery.toString());
+            System.out.println("size:" + dynamicQuery.getListParametros().size());
+        }
+        List<Empleado> empleados = findAll(dynamicQuery.toString(), dynamicQuery.getListParametros());
         return empleados;
+
     }
 
     /**
@@ -103,6 +115,10 @@ public class DaoEmpleadoImplements extends DaoGenericImplements<Empleado> implem
      */
     @Override
     public Empleado findById(Empleado entidad) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Empleado empleado = null;
+        List<ParameterInSql> listParametros = new ArrayList<>();
+        listParametros.add(new ParameterInSql<>(1, entidad.getId(), ConstantesSqlParams.TYPE_INTEGER));
+        empleado = findById(mapSqlQuerys.get(QueryConstantesSQL.SQL_SELECT_BY_ID), listParametros);
+        return empleado;
     }
 }

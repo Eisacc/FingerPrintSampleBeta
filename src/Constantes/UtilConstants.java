@@ -56,4 +56,40 @@ public class UtilConstants {
      */
     public static final String MSJ_INFORMATIVO_CAPTURA_GUARDA = "Se Guardo la Huella Correctamente.";
 
+    /**
+     * SEXOM
+     */
+    public static final String SEXOM = "M";
+
+    /**
+     * SEXOF
+     */
+    public static final String SEXOF = "F";
+
+    /**
+     * SEXOF
+     */
+    public static final String STRING_EMPTY = "";
+
+    /**
+     * EMPLEADO_ALTA
+     */
+    public static final String EMPLEADO_ALTA = "AltaHuellasEmpleado";
+
+    /**
+     * ADVERTENCIA_DELETE
+     */
+    public static final String ADVERTENCIA_DELETE = "¿Esta seguro que desea eliminar a el empleado?";
+
+    /**
+     * ADVERTENCIA_UPDATE
+     */
+    public static final String ADVERTENCIA_UPDATE = "¿Esta seguro que desea Actualizar los datos ?";
+
+    /**
+     * MSJ_ADVERTENCIA_HUELLAS
+     */
+    public static final String MSJ_ADVERTENCIA_HUELLAS = "Se actualizaran o crearan registros nuevos para las huellas del empleado";
+
+    
 }

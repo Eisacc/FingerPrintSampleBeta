@@ -9,14 +9,15 @@ import ApiHuella.DataAdapterInterface;
 import ApiHuella.FingerPrintDataAdapter;
 import Business.BusinessCapturarHuellas;
 import Constantes.UtilConstants;
+import Model.Empleado;
 import Model.HuellaEmpleado;
+import Util.Session;
 import Util.UtilFunctions;
 import Util.UtilJOptionMessages;
 import com.digitalpersona.onetouch.capture.event.DPFPDataEvent;
 import com.digitalpersona.onetouch.capture.event.DPFPErrorEvent;
 import com.digitalpersona.onetouch.capture.event.DPFPReaderStatusEvent;
 import com.digitalpersona.onetouch.capture.event.DPFPSensorEvent;
-import comunes.ConexionDb;
 import comunes.JFrameBase;
 import java.io.File;
 import javax.swing.ImageIcon;
@@ -31,7 +32,19 @@ public class JFCapturHuellas extends JFrameBase implements DataAdapterInterface 
      * fingerPrintDataAdapter
      */
     private FingerPrintDataAdapter fingerPrintDataAdapter;
+    /**
+     * businessCapturarHuellas
+     */
     private BusinessCapturarHuellas businessCapturarHuellas;
+    /**
+     * operacionEnCurso
+     */
+    private Integer operacionEnCurso = 0;
+
+    /**
+     * empleado
+     */
+    private Empleado empleado;
 
     /**
      * Creates new form JFCapturHuellas
@@ -41,15 +54,25 @@ public class JFCapturHuellas extends JFrameBase implements DataAdapterInterface 
         setFrameCurrent(this);
         fingerPrintDataAdapter = new FingerPrintDataAdapter(this);
         fingerPrintDataAdapter.stopLector();
-        ConexionDb con = ConexionDb.getConnectionDb();
-        con.initConnection();
+
         businessCapturarHuellas = new BusinessCapturarHuellas();
+        empleado = getEmpleado();
+        businessCapturarHuellas.loadHuellasEmpleado(empleado);
         businessCapturarHuellas.fillComboDedos(jComboDedos);
         jBCapturarHuella.setEnabled(false);
         jBGuardar.setEnabled(false);
         JBActualizar.setEnabled(false);
         jBCancelar.setEnabled(Boolean.FALSE);
-        
+
+    }
+
+    private Empleado getEmpleado() {
+        Session session = Session.createInstanceSession();
+        Empleado empleado = null;
+        if (UtilFunctions.isNotNull(session.getObjectSession(UtilConstants.EMPLEADO_ALTA))) {
+            empleado = (Empleado) session.getObjectSession(UtilConstants.EMPLEADO_ALTA);
+        }
+        return empleado;
     }
 
     /**
@@ -231,12 +254,13 @@ public class JFCapturHuellas extends JFrameBase implements DataAdapterInterface 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void jComboDedosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboDedosActionPerformed
         final int index = jComboDedos.getSelectedIndex();
         File file = businessCapturarHuellas.getImageDedoMano(index);
         ImageIcon icon = UtilFunctions.arrayBytesToImage(UtilFunctions.fileToArrayBytes(file));
         setImageIconJlabel(jLImageHuella, icon);
-        
+
         switch (businessCapturarHuellas.operacionHuella(index)) {
             case UtilConstants.CREACION_HUELLA:
                 jBGuardar.setEnabled(Boolean.FALSE);
@@ -249,16 +273,16 @@ public class JFCapturHuellas extends JFrameBase implements DataAdapterInterface 
                 jBCapturarHuella.setEnabled(Boolean.FALSE);
                 JBActualizar.setEnabled(Boolean.FALSE);
                 jBCancelar.setEnabled(Boolean.FALSE);
-                
+
                 break;
             case UtilConstants.SIN_ACCION:
                 jBGuardar.setEnabled(Boolean.FALSE);
                 jBCapturarHuella.setEnabled(Boolean.FALSE);
                 JBActualizar.setEnabled(Boolean.FALSE);
                 break;
-            
+
         }
-        
+
 
     }//GEN-LAST:event_jComboDedosActionPerformed
 
@@ -281,7 +305,7 @@ public class JFCapturHuellas extends JFrameBase implements DataAdapterInterface 
         HuellaEmpleado huellaEmpleado = new HuellaEmpleado();
         huellaEmpleado.setIdDedo(jComboDedos.getSelectedIndex());
         huellaEmpleado.setHuella(fingerPrintDataAdapter.getTemplate().serialize());
-        huellaEmpleado.setIdEmpleado(107);
+        huellaEmpleado.setIdEmpleado(empleado.getId());
         businessCapturarHuellas.createRegistroHuella(huellaEmpleado);
 
     }//GEN-LAST:event_jBGuardarActionPerformed
@@ -344,32 +368,32 @@ public class JFCapturHuellas extends JFrameBase implements DataAdapterInterface 
         if (fingerPrintDataAdapter.isIsReadyFingerPrint()) {
             this.jTLogDactilar.append("Huella Capturada Correctamente\n");
             jBGuardar.setEnabled(Boolean.TRUE);
-            
+
         }
     }
-    
+
     @Override
     public void errorReaderFingerDevice(DPFPErrorEvent dPFPErrorEvent) {
-        
+
     }
-    
+
     @Override
     public void readerConnectedDevice(DPFPReaderStatusEvent e) {
         this.jTLogDactilar.append("Dispositivo conectado \n");
     }
-    
+
     @Override
     public void readerDisconnectDevice(DPFPReaderStatusEvent e) {
         this.jTLogDactilar.append("Dispositivo Desconectado\n");
     }
-    
+
     @Override
     public void fingerTouchedDevice(DPFPSensorEvent event) {
-        
+
     }
-    
+
     @Override
     public void fingerGoneDevice(DPFPSensorEvent event) {
-        
+
     }
 }

@@ -42,4 +42,14 @@ public class QueryConstantesSQL {
      */
     public static final String SQL_DELETE = "query.delete";
 
+    /**
+     * WHERE
+     */
+    public static final String WHERE = "WHERE";
+
+    /**
+     * AND
+     */
+    public static final String AND = "AND";
+
 }
